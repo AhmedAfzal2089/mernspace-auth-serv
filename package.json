@@ -1,40 +1,42 @@
 {
-  "name": "auth-service",
-  "version": "1.0.0",
-  "description": "the user management service",
-  "main": "index.js",
-  "scripts": {
-    "dev": "node src/server.js",
-    "format:fix": "prettier . --write",
-    "format:check": "prettier . --check",
-    "lint:check": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AhmedAfzal2089/mernspace-auth-serv.git"
-  },
-  "author": "Ahmed Afzal <ahmedafzal2089@gmail.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/AhmedAfzal2089/mernspace-auth-serv/issues"
-  },
-  "homepage": "https://github.com/AhmedAfzal2089/mernspace-auth-serv#readme",
-  "devDependencies": {
-    "@eslint/js": "^9.21.0",
-    "@types/eslint__js": "^8.42.3",
-    "@types/node": "^22.13.5",
-    "eslint": "^9.21.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
-    "prettier": "3.5.2",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.25.0"
-  },
+    "name": "auth-service",
+    "version": "1.0.0",
+    "description": "the user management service",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node src/server.js",
+        "format:fix": "prettier . --write",
+        "format:check": "prettier . --check",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AhmedAfzal2089/mernspace-auth-serv.git"
+    },
+    "author": "Ahmed Afzal <ahmedafzal2089@gmail.com>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/AhmedAfzal2089/mernspace-auth-serv/issues"
+    },
+    "homepage": "https://github.com/AhmedAfzal2089/mernspace-auth-serv#readme",
+    "devDependencies": {
+        "@eslint/js": "^9.21.0",
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^22.13.5",
+        "eslint": "^9.21.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.4.3",
+        "prettier": "3.5.2",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.25.0"
+    },
     "lint-staged": {
-      "*.ts": ["npm run format:fix", "npm run lint:fix"]
-    
-  }
+        "*.ts": [
+            "npm run format:fix",
+            "npm run lint:fix"
+        ]
+    }
 }
