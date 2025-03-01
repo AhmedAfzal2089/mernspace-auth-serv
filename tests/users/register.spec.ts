@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm'
 import { AppDataSource } from '../../src/config/data-source'
 import { User } from '../../src/entity/User'
 import { App } from 'supertest/types'
-import { truncateTables } from '../utils'
+import { Roles } from '../../src/constants'
 
 describe('POST /auth/register', () => {
     let connection: DataSource
@@ -13,7 +13,8 @@ describe('POST /auth/register', () => {
     })
     beforeEach(async () => {
         // Database truncate (cleaning db before each test)
-        await truncateTables(connection)
+        await connection.dropDatabase()
+        await connection.synchronize()
     })
     afterAll(async () => {
         await connection.destroy()
@@ -90,6 +91,24 @@ describe('POST /auth/register', () => {
             expect((response.body as Record<string, string>).id).toBe(
                 users[0].id,
             )
+        })
+        it('should assign a customer role', async () => {
+            //Arrange
+            const userData = {
+                firstName: 'Ahmed',
+                lastName: 'Afzal',
+                email: 'ahmed@mern.space',
+                password: 'secret',
+            }
+            //Act
+            await request(app as unknown as App)
+                .post('/auth/register')
+                .send(userData)
+            //Assert
+            const repository = connection.getRepository(User)
+            const users = await repository.find()
+            expect(users[0]).toHaveProperty('role')
+            expect(users[0].role).toBe(Roles.CUSTOMER)
         })
     })
     describe('Fields are missing.', () => {})
