@@ -11,11 +11,13 @@ import createHttpError from "http-errors";
 import { Config } from "../config";
 import { AppDataSource } from "../config/data-source";
 import { RefreshToken } from "../entity/RefreshToken";
+import { TokenService } from "../services/TokenService";
 
 export class AuthController {
     constructor(
         private userService: UserService,
         private logger: Logger,
+        private tokenService: TokenService,
     ) {}
     async register(
         req: RegisterUserRequest,
@@ -44,30 +46,15 @@ export class AuthController {
             });
 
             this.logger.info("User has been registered", { id: user.id });
+
             // send token to cookies before the response;
-            let privateKey: Buffer;
-            try {
-                privateKey = fs.readFileSync(
-                    path.join(__dirname, "../../certs/private.pem"),
-                );
-            } catch (err) {
-                const error = createHttpError(
-                    500,
-                    "Error while reading the private key ",
-                );
-                next(error);
-                return;
-            }
 
             const payload: JwtPayload = {
                 sub: String(user.id),
                 role: user.role,
             };
-            const accessToken = sign(payload, privateKey, {
-                algorithm: "RS256",
-                expiresIn: "1h",
-                issuer: "auth-service",
-            });
+
+            const accessToken = this.tokenService.generateAccessToken(payload);
 
             //Persist the refresh token
             const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
@@ -78,12 +65,9 @@ export class AuthController {
                 expiresAt: new Date(Date.now() + MS_IN_YEAR),
             });
 
-            const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
-                // ! making sure its string
-                algorithm: "HS256",
-                expiresIn: "1y",
-                issuer: "auth-service",
-                jwtid: String(newRefreshToken.id), // embeding the refreshToken id of database to the refreshToken
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String(newRefreshToken.id), // bcz we embed the id , so we have to send 1 more payload , so using the spreading technique in this
             });
 
             res.cookie("accessToken", accessToken, {
