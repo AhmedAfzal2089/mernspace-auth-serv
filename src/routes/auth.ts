@@ -12,13 +12,21 @@ import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
 import { TokenService } from "../services/TokenService";
 import { RefreshToken } from "../entity/RefreshToken";
+import loginValidator from "../validators/login-validator";
+import { CredentialsService } from "../services/CredentialsService";
 
 const router = express.Router();
 const userRepository = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository);
 const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
 const tokenService = new TokenService(refreshTokenRepository);
-const authController = new AuthController(userService, logger, tokenService);
+const credentialService = new CredentialsService();
+const authController = new AuthController(
+    userService,
+    logger,
+    tokenService,
+    credentialService,
+);
 
 // because of binding problem we pass req & res like this
 router.post("/register", registerValidator, (async (
@@ -28,4 +36,13 @@ router.post("/register", registerValidator, (async (
 ) => {
     await authController.register(req, res, next);
 }) as RequestHandler);
+
+router.post("/login", loginValidator, (async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    await authController.login(req, res, next);
+}) as RequestHandler);
+
 export default router;
