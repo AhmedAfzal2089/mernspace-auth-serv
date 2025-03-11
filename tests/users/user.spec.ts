@@ -65,5 +65,35 @@ describe("GET auth/self", () => {
             // Check if user id matches with registered user
             expect((response.body as Record<string, string>).id).toBe(data.id);
         });
+        it("should not return the password field", async () => {
+            const userData = {
+                firstName: "Ahmed",
+                lastName: "Afzal",
+                email: "ahmedafzal2089@gmail.com",
+                password: "Password123!",
+            };
+            //Register user
+            const userRepository = connection.getRepository(User);
+            const data = await userRepository.save({
+                ...userData,
+                role: Roles.CUSTOMER,
+            });
+            //Generate Token
+            const accessToken = jwks.token({
+                sub: String(data.id),
+                role: data.role,
+            });
+            // Add token to cookie
+            const response = await request(app as unknown as App)
+                .get("/auth/self")
+                .set("Cookie", [`accessToken=${accessToken};`])
+                .send();
+            console.log(response.body);
+            //Assert
+            // Check if user id matches with registered user
+            expect(response.body as Record<string, string>).not.toHaveProperty(
+                "password",
+            );
+        });
     });
 });

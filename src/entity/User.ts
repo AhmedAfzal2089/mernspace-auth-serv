@@ -14,7 +14,7 @@ export class User {
     @Column({ unique: true })
     email: string;
 
-    @Column()
+    @Column() // the password filed will not come in the record if    select:false
     password: string;
 
     @Column()
