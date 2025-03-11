@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "reflect-metadata";
 import express, { NextFunction, Request, Response } from "express";
+import cookieParser from "cookie-parser";
 import { HttpError } from "http-errors";
 import logger from "./config/logger";
 import authRouter from "./routes/auth";
-const app = express();
 
+const app = express();
+app.use(cookieParser());
 app.use(express.json()); // middleware to accept json data
+
 app.get("/", (req, res) => {
     res.send("Welcome to auth service");
 });
