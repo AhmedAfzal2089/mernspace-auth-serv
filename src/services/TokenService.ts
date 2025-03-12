@@ -7,6 +7,7 @@ import { Config } from "../config";
 import { RefreshToken } from "../entity/RefreshToken";
 import { User } from "../entity/User";
 import { Repository } from "typeorm";
+import { Response } from "express";
 export class TokenService {
     constructor(private refreshTokenRepository: Repository<RefreshToken>) {}
     generateAccessToken(payload: JwtPayload) {
@@ -49,5 +50,23 @@ export class TokenService {
     }
     async deleterefreshToken(tokenId: number) {
         return await this.refreshTokenRepository.delete({ id: tokenId });
+    }
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async accessTokenInCookie(res: Response, accessToken: string) {
+        res.cookie("accessToken", accessToken, {
+            domain: "localhost",
+            sameSite: "strict",
+            maxAge: 1000 * 60 * 60, // 1h , the cookie will be valid for one hour
+            httpOnly: true, // Very important
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async refreshTokenInCookie(res: Response, refreshToken: string) {
+        res.cookie("accessToken", refreshToken, {
+            domain: "localhost",
+            sameSite: "strict",
+            maxAge: 1000 * 60 * 60, // 1h , the cookie will be valid for one hour
+            httpOnly: true, // Very important
+        });
     }
 }

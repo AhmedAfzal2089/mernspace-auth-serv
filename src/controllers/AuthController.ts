@@ -195,19 +195,9 @@ export class AuthController {
                 id: String(newRefreshToken.id), // bcz we embed the id , so we have to send 1 more payload , so using the spreading technique in this
             });
 
-            res.cookie("accessToken", accessToken, {
-                domain: "localhost",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 60, // 1h , the cookie will be valid for one hour
-                httpOnly: true, // Very important
-            });
+            await this.tokenService.accessTokenInCookie(res, accessToken);
 
-            res.cookie("refreshToken", refreshToken, {
-                domain: "localhost",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 60 * 24 * 365, // 1y , the cookie will be valid for one year
-                httpOnly: true, // Very important
-            });
+            await this.tokenService.refreshTokenInCookie(res, refreshToken);
             this.logger.info({ id: user.id });
             res.json({ id: user.id });
         } catch (err) {
