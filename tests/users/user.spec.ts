@@ -88,7 +88,6 @@ describe("GET auth/self", () => {
                 .get("/auth/self")
                 .set("Cookie", [`accessToken=${accessToken};`])
                 .send();
-            console.log(response.body);
             //Assert
             // Check if user id matches with registered user
             expect(response.body as Record<string, string>).not.toHaveProperty(
@@ -112,7 +111,6 @@ describe("GET auth/self", () => {
             const response = await request(app as unknown as App)
                 .get("/auth/self")
                 .send();
-            console.log(response.body);
             //Assert
             // Check if user id matches with registered user
             expect(response.statusCode).toBe(401);

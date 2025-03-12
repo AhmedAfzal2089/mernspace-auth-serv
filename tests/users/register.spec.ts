@@ -127,7 +127,7 @@ describe("POST /auth/register", () => {
             //Assert
             const repository = connection.getRepository(User);
             const users = await repository.find();
-            console.log(users[0].password);
+            // console.log(users[0].password);
             expect(users[0].password).not.toBe(userData.password);
             expect(users[0].password).toHaveLength(60);
             expect(users[0].password).toMatch(/^\$2b\$\d+\$/); // checking the hash starting with this format
