@@ -166,4 +166,53 @@ export class AuthController {
         const user = await this.userService.findById(Number(req.auth.sub));
         res.json({ ...user, password: undefined });
     }
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const payload: JwtPayload = {
+                sub: req.auth.sub,
+                role: req.auth.role,
+            };
+            const accessToken = this.tokenService.generateAccessToken(payload);
+
+            const user = await this.userService.findById(Number(req.auth.sub));
+            if (!user) {
+                const error = createHttpError(
+                    400,
+                    " User with the token could not find",
+                );
+                next(error);
+                return;
+            }
+            //Persist the refresh token
+            const newRefreshToken =
+                await this.tokenService.persistRefreshToken(user);
+
+            // delete old refresh token
+            await this.tokenService.deleterefreshToken(Number(req.auth.id));
+
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String(newRefreshToken.id), // bcz we embed the id , so we have to send 1 more payload , so using the spreading technique in this
+            });
+
+            res.cookie("accessToken", accessToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60, // 1h , the cookie will be valid for one hour
+                httpOnly: true, // Very important
+            });
+
+            res.cookie("refreshToken", refreshToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 365, // 1y , the cookie will be valid for one year
+                httpOnly: true, // Very important
+            });
+            this.logger.info({ id: user.id });
+            res.json({ id: user.id });
+        } catch (err) {
+            next(err);
+            return;
+        }
+    }
 }

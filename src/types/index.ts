@@ -10,5 +10,14 @@ export interface RegisterUserRequest extends Request {
 }
 
 export interface AuthRequest extends Request {
-    auth: { sub: string; role: string }; // the data we are sending in token
+    auth: { sub: string; role: string; id?: string }; // the data we are sending in token
+}
+
+export type AuthCookie = {
+    accessToken: string;
+    refreshToken: string;
+};
+
+export interface IRefershTokenPayload {
+    id: string;
 }
