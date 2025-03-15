@@ -3,6 +3,7 @@ import { AppDataSource } from "../../src/config/data-source";
 import request from "supertest";
 import { App } from "supertest/types";
 import app from "../../src/app";
+import { Tenant } from "../../src/entity/Tenant";
 
 describe("POST /tenants", () => {
     let connection: DataSource;
@@ -27,6 +28,21 @@ describe("POST /tenants", () => {
                 .post("/tenants")
                 .send(tenantData);
             expect(response.status).toBe(201);
+        });
+        it("should create a tenant in the database", async () => {
+            const tenantData = {
+                name: "Tenant Name",
+                address: "Tenant Adress",
+            };
+            await request(app as unknown as App)
+                .post("/tenants")
+                .send(tenantData);
+
+            const tenantRepository = connection.getRepository(Tenant);
+            const tenants = await tenantRepository.find();
+            expect(tenants).toHaveLength(1);
+            expect(tenants[0].name).toBe(tenantData.name);
+            expect(tenants[0].address).toBe(tenantData.address);
         });
     });
 });
