@@ -91,5 +91,56 @@ describe("POST /tenants", () => {
 
             expect(tenants).toHaveLength(0);
         });
+        it("should should return 403 if role is not an admin", async () => {
+            const managerToken = jwks.token({
+                sub: "1",
+                role: Roles.MANAGER,
+            });
+            const tenantData = {
+                name: "Tenant Name",
+                address: "Tenant Adress",
+            };
+            const response = await request(app as unknown as App)
+                .post("/tenants")
+                .set("Cookie", [`accessToken=${managerToken}`])
+                .send(tenantData);
+            expect(response.statusCode).toBe(403);
+            const tenantRepository = connection.getRepository(Tenant);
+            const tenants = await tenantRepository.find();
+
+            expect(tenants).toHaveLength(0);
+        });
+    });
+    describe("Not given all the fields", () => {
+        it("should return 400 if name is not provided", async () => {
+            const tenantData = {
+                name: "",
+                address: "Tenant Adress",
+            };
+            const response = await request(app as unknown as App)
+                .post("/tenants")
+                .set("Cookie", [`accessToken=${adminToken}`])
+                .send(tenantData);
+
+            const tenantRepository = connection.getRepository(Tenant);
+            const tenants = await tenantRepository.find();
+            expect(response.statusCode).toBe(400);
+            expect(tenants).toHaveLength(0);
+        });
+        it("should return 400 if address is not provided", async () => {
+            const tenantData = {
+                name: "Tenant Name",
+                address: "",
+            };
+            const response = await request(app as unknown as App)
+                .post("/tenants")
+                .set("Cookie", [`accessToken=${adminToken}`])
+                .send(tenantData);
+
+            const tenantRepository = connection.getRepository(Tenant);
+            const tenants = await tenantRepository.find();
+            expect(response.statusCode).toBe(400);
+            expect(tenants).toHaveLength(0);
+        });
     });
 });
