@@ -1,8 +1,7 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { TenantService } from "../services/TenantService";
 import { CreateTenantRequest } from "../types";
 import { Logger } from "winston";
-import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
 
 export class TenantController {
@@ -13,11 +12,6 @@ export class TenantController {
     async create(req: CreateTenantRequest, res: Response, next: NextFunction) {
         const { name, address } = req.body;
         this.logger.debug("Request for creating a tenant ", req.body);
-        //validation
-        const result = validationResult(req);
-        if (!result.isEmpty()) {
-            return res.status(400).json({ errors: result.array() });
-        }
         try {
             const tenant = await this.tenantService.create({ name, address });
             this.logger.info("Tenant has been created ", { id: tenant.id });
@@ -27,12 +21,6 @@ export class TenantController {
         }
     }
     async update(req: CreateTenantRequest, res: Response, next: NextFunction) {
-        // Validation
-        const result = validationResult(req);
-        if (!result.isEmpty()) {
-            return res.status(400).json({ errors: result.array() });
-        }
-
         const { name, address } = req.body;
         const tenantId = req.params.id;
 
@@ -52,6 +40,15 @@ export class TenantController {
             this.logger.info("Tenant has been updated", { id: tenantId });
 
             res.json({ id: Number(tenantId) });
+        } catch (err) {
+            next(err);
+        }
+    }
+    async getAll(req: Request, res: Response, next: NextFunction) {
+        try {
+            const tenants = await this.tenantService.getAll();
+            this.logger.info("Tenants Have been Fetched: ");
+            res.json(tenants);
         } catch (err) {
             next(err);
         }
