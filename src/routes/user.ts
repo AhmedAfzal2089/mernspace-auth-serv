@@ -44,5 +44,12 @@ router.get("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
 ) => {
     await userController.getOne(req, res, next);
 }) as RequestHandler);
+router.delete("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
+    req,
+    res,
+    next,
+) => {
+    await userController.destroy(req, res, next);
+}) as RequestHandler);
 
 export default router;
