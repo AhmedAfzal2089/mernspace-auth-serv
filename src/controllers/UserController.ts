@@ -56,4 +56,21 @@ export class UserController {
             next(err);
         }
     }
+    async getOne(req: Request, res: Response, next: NextFunction) {
+        const userId = req.params.id;
+        if (isNaN(Number(userId))) {
+            next(createHttpError(400, "Invalid Url Param"));
+        }
+        try {
+            const user = await this.userService.findById(Number(userId));
+            if (!user) {
+                next(createHttpError(404, "User not found"));
+                return;
+            }
+            this.logger.info("User Has been fetched", { id: user.id });
+            res.json(user);
+        } catch (err) {
+            next(err);
+        }
+    }
 }
