@@ -2,14 +2,14 @@ import { checkSchema } from "express-validator";
 
 export default checkSchema({
     name: {
-        errorMessage: "Name is required!",
-        notEmpty: true,
         trim: true,
+        errorMessage: "Tenant name is required!",
+        notEmpty: true,
     },
     address: {
-        errorMessage: "Adress is required!",
-        notEmpty: true,
         trim: true,
+        errorMessage: "Tenant address is required!",
+        notEmpty: true,
     },
 });
 
