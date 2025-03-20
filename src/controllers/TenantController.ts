@@ -65,7 +65,7 @@ export class TenantController {
                 next(createHttpError(400, "Tenant Id does not exist"));
                 return;
             }
-            this.logger.info("All tenant have been fetched");
+            this.logger.info("Tenant has been fetched");
             res.json(tenants);
         } catch (err) {
             next(err);
