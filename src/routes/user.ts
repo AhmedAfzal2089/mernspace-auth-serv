@@ -21,12 +21,21 @@ router.post("/", authenticate, canAccess([Roles.ADMIN]), (async (
 ) => {
     await userController.create(req, res, next);
 }) as RequestHandler);
+
 router.patch("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
     req,
     res,
     next,
 ) => {
     await userController.update(req, res, next);
+}) as RequestHandler);
+
+router.get("/", authenticate, canAccess([Roles.ADMIN]), (async (
+    req,
+    res,
+    next,
+) => {
+    await userController.getAll(req, res, next);
 }) as RequestHandler);
 
 export default router;
