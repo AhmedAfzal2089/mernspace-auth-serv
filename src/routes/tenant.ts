@@ -39,4 +39,12 @@ router.get("/:id", (async (req: Request, res: Response, next: NextFunction) => {
     await tenantController.getOne(req, res, next);
 }) as RequestHandler);
 
+router.delete("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    await tenantController.destroy(req, res, next);
+}) as RequestHandler);
+
 export default router;
