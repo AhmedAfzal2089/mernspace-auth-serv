@@ -6,6 +6,7 @@ import { HttpError } from "http-errors";
 import logger from "./config/logger";
 import authRouter from "./routes/auth";
 import tenantRouter from "./routes/tenant";
+import userRouter from "./routes/user";
 
 const app = express();
 app.use(express.static("public")); // this will public all the data in it.
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", authRouter);
 app.use("/tenants", tenantRouter);
+app.use("/users", userRouter);
 
 //global error handler
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
