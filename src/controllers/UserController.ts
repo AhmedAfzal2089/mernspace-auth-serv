@@ -17,7 +17,7 @@ export class UserController {
             return res.status(400).json({ errors: result.array() });
         }
 
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password, tenantId } = req.body;
         try {
             const user = await this.userService.create({
                 firstName,
@@ -25,6 +25,7 @@ export class UserController {
                 email,
                 password,
                 role: Roles.MANAGER,
+                tenantId,
             });
             res.status(201).json({ id: user.id });
         } catch (err) {
