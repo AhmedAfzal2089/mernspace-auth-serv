@@ -27,6 +27,7 @@ router.post(
     }) as RequestHandler,
 );
 
+// update route
 router.patch(
     "/:id",
     authenticate,
@@ -37,6 +38,7 @@ router.patch(
     }) as RequestHandler,
 );
 
+// all users route
 router.get("/", authenticate, canAccess([Roles.ADMIN]), (async (
     req,
     res,
@@ -44,6 +46,8 @@ router.get("/", authenticate, canAccess([Roles.ADMIN]), (async (
 ) => {
     await userController.getAll(req, res, next);
 }) as RequestHandler);
+
+// one user route
 router.get("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
     req,
     res,
@@ -51,6 +55,8 @@ router.get("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
 ) => {
     await userController.getOne(req, res, next);
 }) as RequestHandler);
+
+// delete user route
 router.delete("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
     req,
     res,
