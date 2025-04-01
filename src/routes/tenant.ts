@@ -40,7 +40,11 @@ router.get("/", (async (req: Request, res: Response, next: NextFunction) => {
     await tenantController.getAll(req, res, next);
 }) as RequestHandler);
 
-router.get("/:id", (async (req: Request, res: Response, next: NextFunction) => {
+router.get("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     await tenantController.getOne(req, res, next);
 }) as RequestHandler);
 
