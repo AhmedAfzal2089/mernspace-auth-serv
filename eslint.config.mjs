@@ -16,6 +16,8 @@ export default tseslint.config(
             "tests/",
             "*/.spec.ts",
             "coverage/",
+            ".github/",
+            "*/.md"
         ],
     },
     {
@@ -28,7 +30,6 @@ export default tseslint.config(
         rules: {
             // 'no-console': 'error',
             // 'dot-notation': 'error',
-            "@typescript-eslint/no-misused-promises": "off",
         },
     },
 );

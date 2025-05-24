@@ -9,7 +9,7 @@ const userRepository = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository);
 
 const createAdminIfNotExist = async () => {
-    const admin = userRepository.findOne({
+    const admin = await userRepository.findOne({
         where: { role: "ADMIN" },
     });
     if (!admin) {

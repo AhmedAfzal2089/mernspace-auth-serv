@@ -11,15 +11,13 @@ import { Response } from "express";
 export class TokenService {
     constructor(private refreshTokenRepository: Repository<RefreshToken>) {}
     generateAccessToken(payload: JwtPayload) {
-        let privateKey: Buffer;
-        // if (!Config.PRIVATE_KEY) {
-        //     const error = createHttpError(500, "SECRET_KEY is not set ");
-        //     throw error;
-        // }
+        let privateKey: string;
+        if (!Config.PRIVATE_KEY) {
+            const error = createHttpError(500, "SECRET_KEY is not set ");
+            throw error;
+        }
         try {
-            privateKey = fs.readFileSync(
-                path.join(__dirname, "../../certs/private.pem"),
-            );
+            privateKey = Config.PRIVATE_KEY;
         } catch (err) {
             const error = createHttpError(
                 500,
