@@ -16,7 +16,8 @@ export default tseslint.config(
             "tests/",
             "*/.spec.ts",
             "coverage/",
-            ".github",
+            ".github/",
+            "*/.md"
         ],
     },
     {
