@@ -7,8 +7,15 @@ import logger from "./config/logger";
 import authRouter from "./routes/auth";
 import tenantRouter from "./routes/tenant";
 import userRouter from "./routes/user";
+import cors from "cors";
 
 const app = express();
+app.use(
+    cors({
+        origin: ["http://localhost:5174"],
+        credentials: true,
+    }),
+);
 app.use(express.static("public")); // this will public all the data in it.
 app.use(cookieParser());
 app.use(express.json()); // middleware to accept json data
