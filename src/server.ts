@@ -10,7 +10,7 @@ const userService = new UserService(userRepository);
 
 const createAdminIfNotExist = async () => {
     const admin = await userRepository.findOne({
-        where: { role: "ADMIN" },
+        where: { role: "admin" },
     });
     if (!admin) {
         logger.info("No Admin Found...Creating default admin..");
@@ -20,7 +20,7 @@ const createAdminIfNotExist = async () => {
                 lastName: "Admin",
                 email: "admin@example.com",
                 password: "admin123", // You can load this from env for security
-                role: "ADMIN",
+                role: "admin",
                 tenantId: undefined, // or null if needed
             });
             logger.info("Default Admin Created Successfully!");
