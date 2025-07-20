@@ -27,7 +27,7 @@ export class TokenService {
         }
         const accessToken = sign(payload, privateKey, {
             algorithm: "RS256",
-            expiresIn: "1h",
+            expiresIn: "1m",
             issuer: "auth-service",
         });
         return accessToken;
@@ -64,7 +64,7 @@ export class TokenService {
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     async refreshTokenInCookie(res: Response, refreshToken: string) {
-        res.cookie("accessToken", refreshToken, {
+        res.cookie("refreshToken", refreshToken, {
             domain: "localhost",
             sameSite: "strict",
             maxAge: 1000 * 60 * 60, // 1h , the cookie will be valid for one hour
