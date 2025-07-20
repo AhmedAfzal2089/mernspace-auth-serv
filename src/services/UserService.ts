@@ -34,7 +34,7 @@ export class UserService {
                 email,
                 password: hashedPassword,
                 role,
-                tenantId: tenantId ? { id: tenantId } : undefined,
+                tenant: tenantId ? { id: tenantId } : undefined,
             });
         } catch (err) {
             const error = createHttpError(
@@ -76,7 +76,12 @@ export class UserService {
         });
     }
     async findById(id: number) {
-        return await this.userRepository.findOne({ where: { id } });
+        return await this.userRepository.findOne({
+            where: { id },
+            relations: {
+                tenant: true,
+            },
+        });
     }
     async getAll() {
         return await this.userRepository.find();

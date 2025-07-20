@@ -19,7 +19,7 @@ const createAdminIfNotExist = async () => {
                 firstName: "Super",
                 lastName: "Admin",
                 email: "admin@example.com",
-                password: "admin123", // You can load this from env for security
+                password: "Password123!", // load  from env for security
                 role: "admin",
                 tenantId: undefined, // or null if needed
             });
