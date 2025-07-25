@@ -10,6 +10,7 @@ import logger from "../config/logger";
 import createUserValidator from "../validators/create-user-validator";
 import updateUserValidator from "../validators/update-user-validator";
 import { CreateUserRequest, UpdateUserRequest } from "../types";
+import listUsersValidator from "../validators/list-users-validator";
 
 const router = express.Router();
 
@@ -39,13 +40,15 @@ router.patch(
 );
 
 // all users route
-router.get("/", authenticate, canAccess([Roles.ADMIN]), (async (
-    req,
-    res,
-    next,
-) => {
-    await userController.getAll(req, res, next);
-}) as RequestHandler);
+router.get(
+    "/",
+    authenticate,
+    canAccess([Roles.ADMIN]),
+    listUsersValidator,
+    (async (req, res, next) => {
+        await userController.getAll(req, res, next);
+    }) as RequestHandler,
+);
 
 // one user route
 router.get("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
