@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Repository } from "typeorm";
+import { Brackets, Repository } from "typeorm";
 import { User } from "../entity/User";
 import { LimitedUserData, UserData, UserQueryParams } from "../types";
 import createHttpError from "http-errors";
@@ -85,12 +85,31 @@ export class UserService {
     }
     async getAll(validatedQuery: UserQueryParams) {
         // find method fetches all the records in the database which is not good for pagination
-
-        const queryBuilder = this.userRepository.createQueryBuilder();
+        const queryBuilder = this.userRepository.createQueryBuilder("user"); // alias when working with SQL
+        if (validatedQuery.q) {
+            // the ILike is case insensitve while like is sensitive
+            const searchTerm = `%${validatedQuery.q}%`;
+            queryBuilder.where(
+                new Brackets((qb) => {
+                    qb.where(
+                        "(user.firstName || ' ' || user.lastName) ILike :q",
+                        { q: searchTerm }, // binding
+                    ).orWhere("user.email ILike :q", { q: searchTerm });
+                }),
+            );
+            //grouping all these queries /^
+        }
+        if (validatedQuery.role) {
+            queryBuilder.andWhere("user.role=:role", {
+                role: validatedQuery.role,
+            });
+        }
         const result = await queryBuilder
             .skip((validatedQuery.currentPage - 1) * validatedQuery.perPage)
             .take(validatedQuery.perPage)
+            .orderBy("user.id", "DESC")
             .getManyAndCount();
+        console.log(queryBuilder.getSql());
         return result;
     }
     async deleteById(userId: number) {
