@@ -105,11 +105,14 @@ export class UserService {
             });
         }
         const result = await queryBuilder
+            // to get a relation in a query builder , we use left join to get it
+            .leftJoinAndSelect("user.tenant", "tenant")
             .skip((validatedQuery.currentPage - 1) * validatedQuery.perPage)
             .take(validatedQuery.perPage)
             .orderBy("user.id", "DESC")
             .getManyAndCount();
-        console.log(queryBuilder.getSql());
+
+        // console.log(queryBuilder.getSql());
         return result;
     }
     async deleteById(userId: number) {
