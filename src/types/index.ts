@@ -57,4 +57,5 @@ export interface UserQueryParams {
 export interface TenantQueryParams {
     perPage: number;
     currentPage: number;
+    q: string;
 }
