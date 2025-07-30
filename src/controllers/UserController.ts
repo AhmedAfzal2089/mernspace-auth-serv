@@ -17,7 +17,7 @@ export class UserController {
     async create(req: CreateUserRequest, res: Response, next: NextFunction) {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            return res.status(400).json({ errors: result.array() });
+            return next(createHttpError(400, result.array()[0].msg as string));
         }
 
         const { firstName, lastName, email, password, role, tenantId } =
@@ -43,14 +43,13 @@ export class UserController {
         // Validation
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            return res.status(400).json({ errors: result.array() });
+            return next(createHttpError(400, result.array()[0].msg as string));
         }
 
         const { firstName, lastName, email, tenantId, role } = req.body;
         const userId = req.params.id;
         if (isNaN(Number(userId))) {
-            next(createHttpError(400, "Invalid Url Param"));
-            return;
+            return next(createHttpError(400, "Invalid Url Param"));
         }
         this.logger.debug("Request for updating a user", req.body);
         try {
