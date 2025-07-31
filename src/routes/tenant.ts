@@ -37,15 +37,13 @@ router.patch(
         await tenantController.update(req, res, next);
     }) as RequestHandler,
 );
-router.get(
-    "/",
-    authenticate,
-    canAccess([Roles.ADMIN]),
-    listTenantValidator,
-    (async (req: Request, res: Response, next: NextFunction) => {
-        await tenantController.getAll(req, res, next);
-    }) as RequestHandler,
-);
+router.get("/", listTenantValidator, (async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    await tenantController.getAll(req, res, next);
+}) as RequestHandler);
 
 router.get("/:id", authenticate, canAccess([Roles.ADMIN]), (async (
     req: Request,
