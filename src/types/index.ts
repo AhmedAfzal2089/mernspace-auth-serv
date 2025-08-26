@@ -13,7 +13,15 @@ export interface RegisterUserRequest extends Request {
 }
 
 export interface AuthRequest extends Request {
-    auth: { sub: string; role: string; id?: string; tenant: string }; // the data we are sending in token
+    auth: {
+        sub: string;
+        role: string;
+        id?: string;
+        tenant: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+    }; // the data we are sending in token
 }
 
 export type AuthCookie = {
